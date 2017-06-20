@@ -17,41 +17,64 @@ class CanvasObject {
         obj.stage = this.stage;
         this.children.push(obj);
     }
-    set(key,value){
-      this.style[key] = value;
+    set(key, value) {
+        this.style[key] = value;
+    }
+    set x(value){
+      this.style.x = value;
+    }
+    get x(){
+      return this.get('x');
+    }
+    set y(value){
+      this.style.y = value;
+    }
+    get y(){
+      return this.get('y');
+    }
+    set width(value){
+      this.style.width = value;
+    }
+    get width(){
+      return this.get('width');
+    }
+    set height(value){
+      this.style.height = value;
+    }
+    get height(){
+      return this.get('height');
     }
     get(key) {
-      let other;
-      if(key=='x'||key=='y')other = key == 'y' ? 'height':'width';
-      if(key=='width'||key=='height')other = key;
+        let other;
+        if (key == 'x' || key == 'y') other = key == 'y' ? 'height' : 'width';
+        if (key == 'width' || key == 'height') other = key;
         return this.getPosition(key, other);
     }
     getPosition(key, other) {
         let value = 0;
-        let size = 0;
-        let parentValue = this.stage && this.stage[other] ? this.stage[other] : 0;
+        let parentValue = 0;
+        let isPercentage = String(this.style[key]).indexOf('%') >= 0;
+        let size = this.stage && this.stage[other] ? this.stage[other] : 0;
+        let val = this.getNumberValue(this.style[key]);
+
         if (this.parent) {
             parentValue = this.parent.get(key);
-            console.log('parentValue',key,parentValue);
-            size = this.parent.getNumberValue(this.style[other]);
+            size = this.parent.get(other);
         }
-        let val = this.getNumberValue(this.style[key]);
-        if (String(this.style[key]).indexOf('%') >= 0) {
-          value += (val / 100) * parentValue;
-          console.log(key,value);
-        } else{
-          value = (key=='x'||key=='y') ? parentValue + val : val;
-        }
+        if (key == 'x' || key == 'y')
+            value = isPercentage ? parentValue + ((val / 100) * size) : parentValue + val;
+        if (key == 'width' || key == 'height')
+            value = isPercentage ? ((val / 100) * size) : val;
         return value;
     }
     getNumberValue(value) {
         var regex = /(\d+)/g;
-        let intValue = Number(value.match(regex)[0]);
+        let intValue = Number(String(value).match(regex)[0]);
         return intValue;
     }
     render() {
-      if(!this.stage)return;
-        this.stage.context.rect(this.get('x'), this.get('y'),this.get('width'), this.get('height'));
+        if (!this.stage) return;
+        this.stage.context.rect(this.x, this.y, this.get('width'), this.get('height'));
         this.stage.context.stroke();
         this.children.forEach((obj) => {
             obj.render();

@@ -12,12 +12,14 @@ const Main = {
      let obj = new CanvasObject();
      parent.appendChild(obj);
      stage.appendChild(parent);
-     obj.set('x','10%');
-     obj.set('y','10');
-     parent.set('x','20%');
      parent.set('y','100');
      parent.set('width','30%');
-     obj.set('width','30%');
+     parent.set('x','20%');
+     obj.x = '10%';
+     obj.y = '10%';
+     obj.width = '30%';
+     obj.height = '30%';
+     console.log(obj);
     }
 }
 Main.init();

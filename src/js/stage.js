@@ -44,7 +44,7 @@ class Stage {
         this.children.forEach((obj) => {
             obj.render();
         });
-        //window.requestAnimationFrame(this.render.bind(this));
+        window.requestAnimationFrame(this.render.bind(this));
     }
     resize(rect) {
         this.width = rect.width;
